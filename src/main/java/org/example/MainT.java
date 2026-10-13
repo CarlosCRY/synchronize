@@ -6,32 +6,26 @@ import java.util.concurrent.Executors;
 
 public class MainT {
     public static Scanner scr = new Scanner(System.in);
-
     public static void main(String[] args) {
 
-        System.out.println("Cantidad de hilos:");
-        int nt = scr.nextInt();
+        System.out.println("Cantidad de coches:");
+        int cars = scr.nextInt();
+
+        Aparcamiento parking = new Aparcamiento();
 
         long sTime = System.nanoTime();
 
-        try (ExecutorService pool = Executors.newFixedThreadPool(nt)) {
-            for (int i = 0; i < nt; i++) {
-                pool.submit(parking(i + 1));
+        try (ExecutorService eso = Executors.newFixedThreadPool(cars)) {
+            for (int i = 0; i < cars; i++) {
+                int nCar = i + 1;
+                eso.submit(() -> {
+                    parking.aparcar(nCar);
+                });
             }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
 
         long fTime = System.nanoTime();
 
         System.out.println("Tiempo de procesamiento: " + ((fTime - sTime) / 1000));
-    }
-
-    public static Runnable parking(int n) throws InterruptedException{
-        Runnable d = () -> {
-            Aparcamiento car = new Aparcamiento();
-            car.aparcar(n);
-        };
-        return d;
     }
 }
